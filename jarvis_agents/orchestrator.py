@@ -54,6 +54,7 @@ User: "What do I have open?" → [ROUTE:FILES] Let me see what apps you have run
 5. ALWAYS include the [ROUTE:X] tag at the start of your response.
 6. If the user speaks Urdu, reply in Urdu smoothly.
 7. NEVER list options unless asked. Just perform the action and confirm conversationally.
+"""
 
 
 class JarvisOrchestrator:
