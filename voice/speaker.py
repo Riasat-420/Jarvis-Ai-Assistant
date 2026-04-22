@@ -25,9 +25,25 @@ class VoiceSpeaker:
     def __init__(self, voice: str | None = None):
         self.voice = voice or ENGLISH_VOICE
         self.urdu_voice = URDU_VOICE
-        self._output_path = str(TEMP_DIR / "jarvis_response.mp3")
         self._process = None  # Active playback process (killable)
         self.was_interrupted = False  # Flag for interrupt detection
+        self._cleanup_old_audio()
+
+    def _cleanup_old_audio(self):
+        """Remove old cached mp3 files to save space."""
+        try:
+            for file in TEMP_DIR.glob("jarvis_response_*.mp3"):
+                try:
+                    file.unlink()
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
+    def _get_output_path(self) -> str:
+        """Get a fresh output path for the new audio file."""
+        import time
+        return str(TEMP_DIR / f"jarvis_response_{int(time.time() * 1000)}.mp3")
 
     def _detect_language(self, text: str) -> str:
         """Detect if text is primarily Urdu or English."""
@@ -53,9 +69,10 @@ class VoiceSpeaker:
         lang = self._detect_language(clean_text)
         voice = self.urdu_voice if lang == "ur" else self.voice
 
+        output_path = self._get_output_path()
         communicate = edge_tts.Communicate(clean_text, voice)
-        await communicate.save(self._output_path)
-        return self._output_path
+        await communicate.save(output_path)
+        return output_path
 
     def _clean_for_speech(self, text: str) -> str:
         """Remove characters that don't translate well to speech."""
