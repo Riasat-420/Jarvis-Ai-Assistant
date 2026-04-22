@@ -1,0 +1,36 @@
+# Environment
+.env
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jarvis temp files
+temp/
+*.mp3
+*.wav
+data/*.db
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Whisper models (downloaded automatically)
+*.bin
+*.pt
