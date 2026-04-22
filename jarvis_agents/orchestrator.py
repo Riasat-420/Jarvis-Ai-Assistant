@@ -130,16 +130,16 @@ class JarvisOrchestrator:
         if not history:
             return user_input
 
-        # Include last 6 messages (3 conversation turns) for context
-        recent = history[-6:]
+        # Include last 4 messages for context (summarized inline to avoid breaking Groq tool parsing)
+        recent = history[-4:]
         context_lines = []
         for msg in recent:
-            role = "User" if msg["role"] == "user" else "Jarvis"
-            content = msg["content"][:200]  # Truncate long messages
-            context_lines.append(f"{role}: {content}")
+            role = "I previously said" if msg["role"] == "user" else "You previously replied"
+            content = msg["content"][:100]
+            context_lines.append(f'({role}: "{content}")')
 
-        context = "\n".join(context_lines)
-        return f"[Recent conversation for context]\n{context}\n\n[Current request]\n{user_input}"
+        context = " ".join(context_lines)
+        return f"{user_input}\n\n[Context: {context}]"
 
     def _strip_route_tag(self, text: str) -> str:
         """Remove the [ROUTE:X] tag from the response."""
